@@ -1,0 +1,15 @@
+apiVersion: v2
+name: addons
+description: Additional components for the FIWARE Data Space Connector
+type: application
+version: 0.1.0
+dependencies:
+  - name: data-space-connector
+    condition: data-space-connector.enabled
+    version: 7.17.0
+    repository: https://fiware.github.io/data-space-connector/
+  # subscription-based communication between brokers
+  - name: apollo
+    condition: apollo.enabled
+    version: 0.1.0
+    repository: https://fiware.github.io/helm-charts

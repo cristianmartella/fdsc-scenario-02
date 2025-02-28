@@ -1,0 +1,34 @@
+### File variables
+@TIL-HOST = til.127.0.0.1.nip.io:8080
+@TIR-HOST = tir.127.0.0.1.nip.io:8080
+@PROVIDER-A-DID = did:key:zDnaeSxKtsMF4vuwDcTzjm2MyCpQvT8HoDM938dFCdPexhvpC
+@PROVIDER-B-DID = did:key:zDnaeoL9FquPRvvdXUtQKvCysPgeHDG44DvkeWuPcg3spZCMQ
+
+
+### 01. Use TIR API to fetch the global trusted issuers list
+GET http://{{TIR-HOST}}/v4/issuers
+
+
+### 02. Use TIL API to register provider-a participant to the Trust Anchor
+POST http://{{TIL-HOST}}/issuer
+Content-Type: application/json
+
+{
+    "did": "{{PROVIDER-A-DID}}",
+    "credentials": []
+}
+
+
+### 03. Use TIL API to register provider-b participant to the Trust Anchor
+POST http://{{TIL-HOST}}/issuer
+Content-Type: application/json
+
+{
+    "did": "{{PROVIDER-B-DID}}",
+    "credentials": []
+}
+
+
+### 04. Unregister a participant from the Trust Anchor
+@04_PARTICIPANT-DID = DID
+DELETE http://{{TIL-HOST}}/issuer/{{04_PARTICIPANT-DID}}

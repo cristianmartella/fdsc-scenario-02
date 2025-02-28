@@ -1,0 +1,10 @@
+apiVersion: v2
+name: dsc-additions
+description: Additional components for the FIWARE Data Space Connector
+version: 0.0.1
+dependencies:
+  # subscription-based communication between brokers
+  - name: apollo
+    condition: apollo.enabled
+    version: 0.1.0
+    repository: https://fiware.github.io/helm-charts

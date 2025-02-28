@@ -1,0 +1,288 @@
+# Provider B interacts with Provider A's data service, providing entities to be stored in the data service.
+# To this end, it authenticates to Provider A and acquires the necessary authorization to use (i.e. consume) the data service.
+# Thus, Provider B will be an hybrid between a Provider and a Consumer and will include the following services:
+# - A data service (Scorpio) that will be used to store entities that will also be provided to Provider A via a subscription.
+# - A verifiable credential issuance service (Keycloak) that will be used to authenticate to Provider A.
+# For the purposes of this scenario, Provider B's data service will be accessible without authentication layer. Nevertheless, it is possible to include the authentication layer by integrating the required PEP, PDP and PAP components.
+
+
+# -- Credentials Config Service
+credentials-config-service:
+  enabled: true
+
+# -- mysql used for the credentials config service
+mysql:
+  primary:
+    persistence:
+      enabled: true      
+      # use one of the classes provided by your cluster
+      storageClass: local-path
+
+
+# -- Data Service
+scorpio:
+  enabled: true
+
+  # ingress configuration for the data service
+  ingress:
+    enabled: true
+    hosts:
+      - host: scorpio-provider-b.127.0.0.1.nip.io
+        paths:
+          - "/"
+
+  # configuration for the dataservice at the credentials-config-service
+  ccs:
+    defaultOidcScope:
+      name: default
+    oidcScopes:
+      default:
+        - type: UserCredential
+          trustedParticipantsLists:
+            - http://tir.trust-anchor.svc.cluster.local:8080
+          trustedIssuersLists:
+            - http://trusted-issuers-list:8080
+      operator:
+        - type: OperatorCredential
+          trustedParticipantsLists:
+            - http://tir.trust-anchor.svc.cluster.local:8080
+          trustedIssuersLists:
+            - http://trusted-issuers-list:8080
+
+
+# -- Postgis database for Scorpio
+postgis:
+  primary:
+    persistence:
+      enabled: true      
+      # use one of the classes provided by your cluster
+      storageClass: local-path
+
+
+
+# -- Verifiable Credential Issuance Service
+keycloak:
+  ingress:
+    enabled: true
+    hostname: keycloak-provider-b.127.0.0.1.nip.io
+  
+  externalDatabase:
+    host: postgresql
+    database: keycloak
+    user: postgres
+    existingSecret: database-secret
+    existingSecretPasswordKey: postgres-admin-password
+
+  extraEnvVars:
+    # import the configured realm
+    - name: KEYCLOAK_EXTRA_ARGS
+      value: "--import-realm"
+    # enable the issuance feature
+    - name: KC_FEATURES
+      value: "oid4vc-vci"
+    # indicates ssl is terminated at the edge
+    - name: KC_PROXY
+      value: "edge"
+    # password for reading the key store connected to the did
+    - name: STORE_PASS
+      value: test
+    # keycloak admin password
+    - name: KC_ADMIN_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: issuance-secret
+          key: keycloak-admin
+    # log level for keycloak
+    - name: KC_LOG_LEVEL
+      value: INFO
+    # hostname of keycloak to be set as part of the realm config
+    - name: KC_HOSTNAME
+      value: keycloak-provider-b.127.0.0.1.nip.io
+    # did of the provider b
+    - name: DID
+      value: "did:key:zDnaeoL9FquPRvvdXUtQKvCysPgeHDG44DvkeWuPcg3spZCMQ"
+
+  extraVolumeMounts:
+    - name: did-material
+      mountPath: /did-material
+    - name: did-material
+      mountPath: "/etc/env"
+      readOnly: true
+    - name: realms
+      mountPath: /opt/bitnami/keycloak/data/import
+
+  extraVolumes:
+    - name: did-material
+      secret:
+        secretName: provider-b-identity
+    - name: realms
+      configMap:
+        name: test-realm-realm
+
+  realm:
+    frontendUrl: http://keycloak-provider-b.127.0.0.1.nip.io:8080
+    import: true
+    name: test-realm
+    clientRoles: |-
+      "${DID}": [
+        {
+            "name": "READER",
+            "description": "Is allowed to see offers etc.",
+            "clientRole": true
+        },
+        {
+            "name": "OPERATOR",
+            "description": "Is allowed to operate clusters.",
+            "clientRole": true
+        }
+      ]
+
+    users: |-
+      {
+        "username": "test-user",
+        "enabled": true,
+        "email": "test@user.org",
+        "firstName": "Test",
+        "lastName": "Reader",
+        "credentials": [
+            {
+                "type": "password",
+                "value": "test"
+            }
+        ],
+        "clientRoles": {
+            "${DID}": [
+                "OPERATOR"
+            ],
+            "account": [
+                "view-profile",
+                "manage-account"
+            ]
+        },
+        "groups": []
+      }
+    
+    clients: |-
+      {
+        "clientId": "${DID}",
+        "enabled": true,
+        "description": "Client to connect test.org",
+        "surrogateAuthRequired": false,
+        "alwaysDisplayInConsole": false,
+        "clientAuthenticatorType": "client-secret",
+        "defaultRoles": [],
+        "redirectUris": [],
+        "webOrigins": [],
+        "notBefore": 0,
+        "bearerOnly": false,
+        "consentRequired": false,
+        "standardFlowEnabled": true,
+        "implicitFlowEnabled": false,
+        "directAccessGrantsEnabled": false,
+        "serviceAccountsEnabled": false,
+        "publicClient": false,
+        "frontchannelLogout": false,
+        "protocol": "oid4vc",
+        "attributes": {
+            "client.secret.creation.time": "1675260539",
+            "vc.user-credential.format": "jwt_vc",
+            "vc.user-credential.scope": "UserCredential",
+            "vc.verifiable-credential.format": "jwt_vc",
+            "vc.verifiable-credential.scope": "VerifiableCredential",
+            "vc.operator-credential.format": "jwt_vc",
+            "vc.operator-credential.scope": "OperatorCredential"
+        },
+        "protocolMappers": [
+            {
+                "name": "target-role-mapper",
+                "protocol": "oid4vc",
+                "protocolMapper": "oid4vc-target-role-mapper",
+                "config": {
+                    "subjectProperty": "roles",
+                    "clientId": "${DID}",
+                    "supportedCredentialTypes": "OperatorCredential"
+                }
+            },
+            {
+                "name": "context-mapper",
+                "protocol": "oid4vc",
+                "protocolMapper": "oid4vc-context-mapper",
+                "config": {
+                    "context": "https://www.w3.org/2018/credentials/v1",
+                    "supportedCredentialTypes": "VerifiableCredential,UserCredential,OperatorCredential"
+                }
+            },
+            {
+                "name": "email-mapper",
+                "protocol": "oid4vc",
+                "protocolMapper": "oid4vc-user-attribute-mapper",
+                "config": {
+                    "subjectProperty": "email",
+                    "userAttribute": "email",
+                    "supportedCredentialTypes": "UserCredential,OperatorCredential"
+                }
+            },
+            {
+                "name": "firstName-mapper",
+                "protocol": "oid4vc",
+                "protocolMapper": "oid4vc-user-attribute-mapper",
+                "config": {
+                    "subjectProperty": "firstName",
+                    "userAttribute": "firstName",
+                    "supportedCredentialTypes": "UserCredential,OperatorCredential"
+                }
+            },
+            {
+                "name": "lastName-mapper",
+                "protocol": "oid4vc",
+                "protocolMapper": "oid4vc-user-attribute-mapper",
+                "config": {
+                    "subjectProperty": "lastName",
+                    "userAttribute": "lastName",
+                    "supportedCredentialTypes": "UserCredential,OperatorCredential"
+                }
+            }
+        ],
+        "authenticationFlowBindingOverrides": {},
+        "fullScopeAllowed": true,
+        "nodeReRegistrationTimeout": -1,
+        "defaultClientScopes": [],
+        "optionalClientScopes": []
+      }
+
+
+# -- Database for keycloak as the issuer needs to be registered
+postgresql:
+  primary:
+    persistence:
+      enabled: true      
+      # use one of the classes provided by your cluster
+      storageClass: local-path
+
+
+
+# -- Excluded services
+
+# -- VCVerifier
+vcverifier:
+  enabled: false
+
+# -- Trusted Issuers List
+trusted-issuers-list:
+  enabled: false
+
+# -- Policy Administration Point
+odrl-pap:
+  enabled: false
+
+# -- APISIX - Policy Enforcement Point
+apisix:
+  enabled: false
+
+# -- TM Forum API to support contracting
+tm-forum-api:
+  enabled: false
+
+# -- Contract Management
+contract-management:
+  enabled: false
