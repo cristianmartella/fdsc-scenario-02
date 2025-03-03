@@ -1,0 +1,64 @@
+### File variables
+#@DATA-SERVICE-FEDERATOR-HOST = apollo-provider-federator.127.0.0.1.nip.io:8080
+# @SCORPIO-FEDERATOR-HOST = scorpio-provider-federator.127.0.0.1.nip.io:8080
+@SCORPIO-FEDERATED-PROVIDER-A-HOST = scorpio-federated-provider-a.127.0.0.1.nip.io:8080
+
+# @DATA-SERVICE-FEDERATOR-HOST = mp-data-service-federator.127.0.0.1.nip.io:8080
+
+#@DATA-SERVICE-FEDERATED-PROVIDER-A-HOST = mp-data-service-federated-provider-a.127.0.0.1.nip.io:8080
+
+
+### Entity CRUD lifecycle
+
+### -- 01. Create an entity on federated-provider-a data service 
+POST http://{{SCORPIO-FEDERATED-PROVIDER-A-HOST}}/ngsi-ld/v1/entities
+Content-Type: application/ld+json
+
+{
+    "id": "urn:ngsi-ld:PhotovoltaicMeasurement:fms-1",
+    "type": "PhotovoltaicMeasurement",
+    "name": {
+        "type": "Property",
+        "value": "SmartPV Station 1"
+    },
+    "nominalPeakPowerGeneration": {
+        "type": "Property",
+        "value": "95"
+    },
+    "@context": ["https://raw.githubusercontent.com/smart-data-models/dataModel.GreenEnergy/master/context.jsonld"]
+}
+
+
+### -- 02. Get an entity on federated-provider-a data service
+@02_ENTITY-ID = urn:ngsi-ld:PhotovoltaicMeasurement:fms-1
+
+GET http://{{SCORPIO-FEDERATED-PROVIDER-A-HOST}}/ngsi-ld/v1/entities/{{02_ENTITY-ID}}
+Accept: application/json
+
+
+### -- 03. Update an entity on federated-provider-a data service
+@03_ENTITY-ID = urn:ngsi-ld:PhotovoltaicMeasurement:fms-1
+PUT http://{{SCORPIO-FEDERATED-PROVIDER-A-HOST}}/ngsi-ld/v1/entities/{{03_ENTITY-ID}}
+Content-Type: application/ld+json
+
+{
+    "type": "PhotovoltaicMeasurement",
+    "name": {
+        "type": "Property",
+        "value": "SmartPV Station 1"
+    },
+    "nominalPeakPowerGeneration": {
+        "type": "Property",
+        "value": "100"
+    },
+    "@context": ["https://raw.githubusercontent.com/smart-data-models/dataModel.GreenEnergy/master/context.jsonld"]
+}
+
+
+### -- 04. Delete an entity on federated-provider-a data service
+@04_ENTITY-ID = urn:ngsi-ld:PhotovoltaicMeasurement:fms-1
+
+DELETE http://{{SCORPIO-FEDERATED-PROVIDER-A-HOST}}/ngsi-ld/v1/entities/{{04_ENTITY-ID}}
+
+
+

@@ -42,7 +42,7 @@ done
 echo "Provider root folder set: $provider_root"
 
 provider_name=$(basename $provider_root)
-provider_identity_path="$provider_root/provider-identity"
+provider_identity_path="$provider_root/identity"
 DID_HELPER="$(pwd)/did-helper"
 
 PRIVATE_KEY="$provider_identity_path/private-key.pem"
@@ -128,7 +128,7 @@ echo "Deploying the key into the cluster"
 kubectl create secret generic $provider_name-identity --from-file=$KEYSTORE -n $provider_name 2>/dev/null
 
 echo "Deploying $provider_name..."
-helm install $provider_name-dsc data-space-connector/data-space-connector --version 7.17.0 -f $provider_root/values.yaml --namespace=$provider_name
+helm install $provider_name-dsc data-space-connector/data-space-connector --version 7.22.7 -f $provider_root/values.yaml --namespace=$provider_name
 
 kubectl wait pod --selector=job-name!='tmf-api-registration' --all --for=condition=Ready -n $provider_name --timeout=300s &>/dev/null && kill -INT $(pidof watch) 2>/dev/null &
 watch kubectl get pods -n $provider_name

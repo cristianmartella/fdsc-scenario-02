@@ -1,6 +1,6 @@
 ### File variables
-@MP_TMF_API_HOST = mp-tmf-api-a.127.0.0.1.nip.io:8080
-@DATA_SERVICE_HOST = mp-data-service-a.127.0.0.1.nip.io:8080
+@MP_TMF_API_HOST = mp-tmf-api-federator.127.0.0.1.nip.io:8080
+@DATA_SERVICE_HOST = mp-data-service-federator.127.0.0.1.nip.io:8080
 @USER_ACCESS_TOKEN = <USER-ACCESS-TOKEN>
 @OPERATOR_ACCESS_TOKEN = <OPERATOR-ACCESS-TOKEN>
 

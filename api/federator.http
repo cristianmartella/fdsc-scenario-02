@@ -1,0 +1,130 @@
+### File variables
+@DATA-SERVICE-FEDERATOR-HOST = mp-data-service-federator.127.0.0.1.nip.io:8080
+@SCORPIO-FEDERATOR-HOST = scorpio-provider-federator.127.0.0.1.nip.io:8080
+@SCORPIO-FEDERATED-PROVIDER-A-HOST = scorpio-federated-provider-a.127.0.0.1.nip.io:8080
+@TMF-API-HOST = tm-forum-api.127.0.0.1.nip.io:8080
+
+
+
+### Federation of brokers -- Access to the data services APIs through the auth layer
+
+#$ export USER_CREDENTIAL=$(./get_credential_for_consumer.sh http://keycloak-federated-provider-a.127.0.0.1.nip.io:8080 user-credential); echo ${USER_CREDENTIAL}
+#$ ./get_access_token_oid4vp.sh http://mp-data-service-federator.127.0.0.1.nip.io:8080 $USER_CREDENTIAL user ../wallet
+
+@USER_ACCESS_TOKEN = eyJhbGciOiJSUzI1NiIsImtpZCI6IldyNmtXOGg1N2ZCYjRoemNJNTNVTXduUkdzb01BcTZmZVRhU1prNjMzZWciLCJ0eXAiOiJKV1QifQ.eyJhdWQiOlsiZGF0YS1zZXJ2aWNlIl0sImNsaWVudF9pZCI6ImRpZDprZXk6ekRuYWVTeEt0c01GNHZ1d0RjVHpqbTJNeUNwUXZUOEhvRE05MzhkRkNkUGV4aHZwQyIsImV4cCI6MTc0MDk5OTc4OSwiaXNzIjoiZGlkOmtleTp6RG5hZVN4S3RzTUY0dnV3RGNUemptMk15Q3BRdlQ4SG9ETTkzOGRGQ2RQZXhodnBDIiwia2lkIjoiV3I2a1c4aDU3ZkJiNGh6Y0k1M1VNd25SR3NvTUFxNmZlVGFTWms2MzNlZyIsInN1YiI6IiIsInZlcmlmaWFibGVDcmVkZW50aWFsIjp7IkBjb250ZXh0IjpbImh0dHBzOi8vd3d3LnczLm9yZy8yMDE4L2NyZWRlbnRpYWxzL3YxIiwiaHR0cHM6Ly93d3cudzMub3JnL25zL2NyZWRlbnRpYWxzL3YxIl0sImNyZWRlbnRpYWxTdWJqZWN0Ijp7ImVtYWlsIjoidGVzdEB1c2VyLm9yZyIsImZpcnN0TmFtZSI6IlRlc3QiLCJsYXN0TmFtZSI6IlJlYWRlciJ9LCJpZCI6InVybjp1dWlkOjdhZTZiOTJkLWJjMmQtNGVlOS04NWIzLWRhOTdjNzY0NzMzMCIsImlzc3VhbmNlRGF0ZSI6IjIwMjUtMDMtMDNUMTA6MzI6NTdaIiwiaXNzdWVyIjoiZGlkOmtleTp6RG5hZW9MOUZxdVBSdnZkWFV0UUt2Q3lzUGdlSERHNDREdmtlV3VQY2czc3BaQ01RIiwidHlwZSI6WyJVc2VyQ3JlZGVudGlhbCJdfX0.H-Xs-m-Mmuaun0nV2bio9JmemEjASK3l-uzg5oHSAICGBhKfKAL1dpT-nR78pguVz_1U4jnJ74AfDMGCocxzKAvCAP-wirTWGeKOouGFLKY1I2F39EpKArRksnEhSLdusxk3fY4JHHMHfwTwB46JuitQJkvZh_IWxTbh3IMIv0wC1d_pmPZCXX7rw_gFipr2s4Y_W4oYWsT4X5cEY1t5CRvW1TuEp0Prsh0HJd80gfLdU7FfH4OX2uuSRuuf4fMZe-76gG7GOc8Q5k5fDB6_Rva0fD-EsPaB32KPREaFOsm3E3MLVsa7gvpZe8FGwTthR9JIayNmHB2fcYZroUMT-g
+
+
+### -- 01. Register federated-provider-a into the federator broker federator with auth for a given entity type
+@01_ENTITY-TYPE = PhotovoltaicMeasurement
+
+POST http://{{DATA-SERVICE-FEDERATOR-HOST}}/ngsi-ld/v1/csourceRegistrations
+Content-Type: application/ld+json
+Authorization: Bearer {{USER_ACCESS_TOKEN}}
+
+{
+    "id": "urn:ngsi-ld:ContextSourceRegistration:federated-provider-a",
+    "type": "ContextSourceRegistration",
+    "information": [
+        {
+            "entities": [
+                {
+                    "type": "{{01_ENTITY-TYPE}}"
+                }
+            ]
+        }
+    ],
+    "endpoint": "http://{{SCORPIO-FEDERATED-PROVIDER-A-HOST}}",
+    "@context": ["https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.7.jsonld"]
+}
+
+
+### -- 02. Get the registered context sources on federator data service for a given entity type
+@02_ENTITY-TYPE = PhotovoltaicMeasurement
+
+GET http://{{DATA-SERVICE-FEDERATOR-HOST}}/ngsi-ld/v1/csourceRegistrations/?type={{02_ENTITY-TYPE}}
+Accept: application/ld+json
+Authorization: Bearer {{USER_ACCESS_TOKEN}}
+
+
+### -- 03. Delete a context source registration on federator data service
+@03_CSOURCE-REGISTRATION-ID = urn:ngsi-ld:ContextSourceRegistration:federated-provider-a
+
+DELETE http://{{DATA-SERVICE-FEDERATOR-HOST}}/ngsi-ld/v1/csourceRegistrations/{{03_CSOURCE-REGISTRATION-ID}}
+Accept: application/json
+Authorization: Bearer {{USER_ACCESS_TOKEN}}
+
+
+### -- 04. Get an entity created on federated-provider-a data service from federator data service
+@04_ENTITY-ID = urn:ngsi-ld:PhotovoltaicMeasurement:fms-1
+
+GET http://{{DATA-SERVICE-FEDERATOR-HOST}}/ngsi-ld/v1/entities/{{04_ENTITY-ID}}
+Accept: application/json
+Authorization: Bearer {{USER_ACCESS_TOKEN}}
+
+
+
+## Data service configuration
+
+### 05. Get the data space configuration
+GET http://{{DATA-SERVICE-FEDERATOR-HOST}}/.well-known/data-space-configuration
+
+
+### 06. Get the openid configuration
+GET http://{{DATA-SERVICE-FEDERATOR-HOST}}/.well-known/openid-configuration
+
+
+
+## TM Forum API
+
+### 07. Create a product specification
+@06_PRODUCT-NAME = M&P K8S
+@06_PRODUCT-BRAND = M&P Operations
+@06_PRODUCT-VERSION = 1.0.0
+
+POST http://{{TMF-API-HOST}}/tmf-api/productCatalogManagement/v4/productSpecification
+Content-Type: application/json;charset=utf-8
+
+{
+  "name": "{{06_PRODUCT-NAME}}",
+  "brand": "{{06_PRODUCT-BRAND}}",
+  "version": "{{06_PRODUCT-VERSION}}",
+  "lifecycleStatus": "ACTIVE"
+}
+
+
+### 08. Get the product specification list
+GET http://{{TMF-API-HOST}}/tmf-api/productCatalogManagement/v4/productSpecification
+
+
+### 09. Delete a product specification
+@07_PRODUCT-SPEC-ID = ID
+
+DELETE http://{{TMF-API-HOST}}/tmf-api/productCatalogManagement/v4/productSpecification/{{07_PRODUCT-SPEC-ID}}
+
+
+### 10. Get the product offering list
+GET http://{{TMF-API-HOST}}/tmf-api/productCatalogManagement/v4/productOffering
+
+
+### 11. Create a product offering that references the product specification
+@09_PRODUCT-SPEC-ID = urn:ngsi-ld:product-specification:4d22ad6e-bb45-4603-9424-d6aa3868a7b7
+@09_OFFERING-NAME = M&P K8S Offering
+@09_OFFERING-VERSION = 1.0.0
+
+POST http://{{TMF-API-HOST}}/tmf-api/productCatalogManagement/v4/productOffering
+Content-Type: application/json;charset=utf-8
+
+{
+  "name": "{{09_OFFERING-NAME}}",
+  "version": "{{09_OFFERING-VERSION}}",
+  "productSpecification": {
+    "id": "{{09_PRODUCT-SPEC-ID}}"
+  },
+  "lifecycleStatus": "ACTIVE"
+}
+
+
+### 12. Delete a product offering
+@10_OFFERING-ID = ID
+
+DELETE http://{{TMF-API-HOST}}/tmf-api/productCatalogManagement/v4/productOffering/{{10_OFFERING-ID}}

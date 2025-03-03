@@ -1,9 +1,9 @@
-# Provider B interacts with Provider A's data service, providing entities to be stored in the data service.
-# To this end, it authenticates to Provider A and acquires the necessary authorization to use (i.e. consume) the data service.
-# Thus, Provider B will be an hybrid between a Provider and a Consumer and will include the following services:
-# - A data service (Scorpio) that will be used to store entities that will also be provided to Provider A via a subscription.
-# - A verifiable credential issuance service (Keycloak) that will be used to authenticate to Provider A.
-# For the purposes of this scenario, Provider B's data service will be accessible without authentication layer. Nevertheless, it is possible to include the authentication layer by integrating the required PEP, PDP and PAP components.
+# federated-provider-a interacts with federator's data service, sharing the entities stored in its data service through a Context Source Registration (CSR).
+# To this end, it authenticates to the federator and acquires the necessary authorization to use (i.e. consume) the data service.
+# Thus, federated-provider-a will be an hybrid between a Provider and a Consumer and will include the following services:
+# - A data service (Scorpio) that will be used to store entities that will also be available at the federator through a CSR.
+# - A verifiable credential issuance service (Keycloak) that will be used to authenticate to federator.
+# For the purposes of this scenario, federated-provider-a's data service will be accessible without authentication layer. Nevertheless, it is possible to include the authentication layer by integrating the required PEP, PDP and PAP components.
 
 
 # -- Credentials Config Service
@@ -27,7 +27,7 @@ scorpio:
   ingress:
     enabled: true
     hosts:
-      - host: scorpio-provider-b.127.0.0.1.nip.io
+      - host: scorpio-federated-provider-a.127.0.0.1.nip.io
         paths:
           - "/"
 
@@ -64,7 +64,7 @@ postgis:
 keycloak:
   ingress:
     enabled: true
-    hostname: keycloak-provider-b.127.0.0.1.nip.io
+    hostname: keycloak-federated-provider-a.127.0.0.1.nip.io
   
   externalDatabase:
     host: postgresql
@@ -97,8 +97,8 @@ keycloak:
       value: INFO
     # hostname of keycloak to be set as part of the realm config
     - name: KC_HOSTNAME
-      value: keycloak-provider-b.127.0.0.1.nip.io
-    # did of the provider b
+      value: keycloak-federated-provider-a.127.0.0.1.nip.io
+    # did of federated-provider-a
     - name: DID
       value: "did:key:zDnaeoL9FquPRvvdXUtQKvCysPgeHDG44DvkeWuPcg3spZCMQ"
 
@@ -114,13 +114,13 @@ keycloak:
   extraVolumes:
     - name: did-material
       secret:
-        secretName: provider-b-identity
+        secretName: federated-provider-a-identity
     - name: realms
       configMap:
         name: test-realm-realm
 
   realm:
-    frontendUrl: http://keycloak-provider-b.127.0.0.1.nip.io:8080
+    frontendUrl: http://keycloak-federated-provider-a.127.0.0.1.nip.io:8080
     import: true
     name: test-realm
     clientRoles: |-
