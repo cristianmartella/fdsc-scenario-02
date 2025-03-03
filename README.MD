@@ -9,6 +9,7 @@
   - [Registration operations](#registration-operations)
     - [Additive registrations](#additive-registrations)
     - [Proxied registrations](#proxied-registrations)
+  - [Demo scenario](#demo-scenario)
 
 ## Introduction
 
@@ -36,12 +37,12 @@ There are four types of **registration operations**, two additive and two proxie
 ```mermaid
 graph TD;
     root(Registration
-        options)-->additive(additive);
-    root-->proxied(proxied);
-    additive-->inclusive(inclusive);
-    additive-->auxiliary(auxiliary);
-    proxied-->exclusive(exclusive);
-    proxied-->redirect(redirect);
+        options)-->additive(Additive);
+    root-->proxied(Proxied);
+    additive-->inclusive(Inclusive);
+    additive-->auxiliary(Auxiliary);
+    proxied-->exclusive(Exclusive);
+    proxied-->redirect(RSedirect);
 ```
 
 ### Additive registrations
@@ -61,3 +62,14 @@ The two CSR included in this group are:
 
 - **Exclusive** CSR - All of the context data registered is held in a single location external to the CB. The CB itself holds no data locally about the registered attributes on the entity. An exclusive registration **must be fully specified**. It always relates to specific attributes found on a single Entity. Exclusive CSR can be used for actuations.
 - **Redirect** CSR - Registered context data is held in a location external to the CB (as well), but potentially multiple distinct redirect registrations can apply at the same time.
+
+## Demo scenario
+
+The demo includes the federation of two participants: a **federator** and a **federated data provider**. The federated data provider establishes a CSR with the federator, making the entities stored in its data service consultable from the federator's data service.
+
+To this end, the federated data provider authenticates to the federator and acquires the necessary authorization to use (i.e. consume) the federator's data service. Thus, from the participant configuration standpoint, the federated data provider can be considered as an hybrid between a Provider and a Consumer and will include the following services:
+
+- A data service used to store entities that will be made available at the federator through the CSR
+- A verifiable credential issuer service used to authenticate to the federator
+
+For the purposes of this demo scenario, the federated provider data service will be accessible without authentication layer. Nevertheless, it is possible to include the authentication layer by integrating the required PEP, PDP and PAP components.
