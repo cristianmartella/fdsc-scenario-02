@@ -10,6 +10,10 @@
     - [Additive registrations](#additive-registrations)
     - [Proxied registrations](#proxied-registrations)
   - [Demo scenario](#demo-scenario)
+    - [Architecture](#architecture)
+      - [General model](#general-model)
+      - [Demo scenario architecture](#demo-scenario-architecture)
+  - [Components overview](#components-overview)
 
 ## Introduction
 
@@ -36,13 +40,13 @@ There are four types of **registration operations**, two additive and two proxie
 
 ```mermaid
 graph TD;
-    root(Registration
-        options)-->additive(Additive);
-    root-->proxied(Proxied);
-    additive-->inclusive(Inclusive);
-    additive-->auxiliary(Auxiliary);
-    proxied-->exclusive(Exclusive);
-    proxied-->redirect(RSedirect);
+  root(Registration
+      options)-->additive(Additive);
+  root-->proxied(Proxied);
+  additive-->inclusive(Inclusive);
+  additive-->auxiliary(Auxiliary);
+  proxied-->exclusive(Exclusive);
+  proxied-->redirect(RSedirect);
 ```
 
 ### Additive registrations
@@ -73,3 +77,112 @@ To this end, the federated data provider authenticates to the federator and acqu
 - A verifiable credential issuer service used to authenticate to the federator
 
 For the purposes of this demo scenario, the federated provider data service will be accessible without authentication layer. Nevertheless, it is possible to include the authentication layer by integrating the required PEP, PDP and PAP components.
+
+### Architecture
+
+#### General model
+
+The general model consists of a multi-level hierarchy of federated context sources where each participant aggregates the contributions offered by downstream context units (i.e. federated providers) and potentially becomes a federated provider for its upstream federators. This scenario is illustrated in the following diagram.
+
+```mermaid
+graph BT;
+  subgraph l5[" "]
+  direction TB
+    K0(FP K,0)
+    etc5(...)
+      style etc5 stroke-width:0px
+    KM(FP K,M)
+  end
+
+  subgraph l4[" "]
+  direction TB
+    etc4(...)
+      style etc4 stroke-width:0px
+  end
+
+  subgraph l3[" "]
+  direction TB
+    IJ(FP/F i,j)
+    etc3(...)
+      style etc3 stroke-width:0px
+  end
+
+  subgraph l2[" "]
+  direction TB
+    etc2(...)
+      style etc2 stroke-width:0px
+  end
+
+  subgraph l1[" "]
+  direction TB
+    0(FP/F 1,0)
+    etc1(...)
+      style etc1 stroke-width:0px
+    N(FP/F 1,N)
+  end
+
+  subgraph l0[" "]
+    R(Root F)
+  end
+
+  0-->R
+  etc1-->R
+  N-->R
+
+  etc2-->0
+
+  IJ-->etc2
+  etc3-->etc2
+
+  etc4-->IJ
+
+  K0-->etc4
+  etc5-->etc4
+  KM-->etc4
+
+  style etc1 fill:transparent
+  style etc2 fill:transparent
+  style etc3 fill:transparent
+  style etc4 fill:transparent
+  style etc5 fill:transparent
+  style l0 fill:transparent,stroke:transparent
+  style l1 fill:transparent,stroke:transparent
+  style l2 fill:transparent,stroke:transparent
+  style l3 fill:transparent,stroke:transparent
+  style l4 fill:transparent,stroke:transparent
+  style l5 fill:transparent,stroke:transparent
+```
+
+The diagram shows the general tree topology of federator (F) and federated provider (FP) participants considered in this scenario. In particular, for a generic node $FP/F_{i,j}$, let $i\in\left[0,K\right]$ be the depth of the node in the hierarchy starting from the root node, where $K$ corresponds to the height of the tree. Similarly, let $j\in\left[0,Q\right]$ be the index of the node, where $Q$ corresponds to the maximum degree of its parent nodes.
+The node $FP/F_{i,j}$ can participate to the federation of multiple upstream federators, while combining the contributions provided by context source registrations related to its downstream federated providers. 
+
+In this tree representation the root is a federator while the leaves are federated providers.
+
+It is possible to combine multiple trees together and achieve advanced federation schemas.
+For instance, is possible to have multiple federators for any given set of downstream federated providers. This consideration leads to more complex designs, but will not be further discussed because it is out of the scope of this work.
+
+#### Demo scenario architecture
+
+This demo scenario consists of two participants: a federator and a federated provider. The resulting two-levels architectural model is represented in the following diagram.
+
+```mermaid
+graph BT
+  F(federator)
+  FPA(federated-provider-a)
+
+  FPA-->F
+```
+
+```txt
+NOTE: the suffix '-a' emphasizes the possibility to scale up the model and include additional federated providers (e.g. with suffixes '-b', '-c', and so forth).
+```
+
+## Components overview
+
+[k3s cluster deployment (fdsc-scenario-01)](https://github.com/cristianmartella/fdsc-scenario-01?tab=readme-ov-file#setup-k3s-cluster)
+
+[Trust Anchor (fdsc-scenario-01)](https://github.com/cristianmartella/fdsc-scenario-01/blob/master/doc/trust-anchor/TRUST-ANCHOR.MD)
+
+[Federator](./doc/federator/FEDERATOR.MD)
+
+[Federated provider](./doc/federated-provider/FEDERATED-PROVIDER.MD)
