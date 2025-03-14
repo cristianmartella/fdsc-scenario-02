@@ -3,7 +3,7 @@
 echo "*** Wallet identity creation ***"
 
 wallet_path=$(builtin cd $(pwd)/..; pwd)/wallet-identity
-participant_name="consumer"
+vc_issuer="consumer"
 user_credential=""
 operator_credential=""
 
@@ -21,9 +21,9 @@ while getopts 'p:n:' opt; do
             ;;
         n)
             if [ ! -z $OPTARG ]; then
-                participant_name=$OPTARG
+                vc_issuer=$OPTARG
             else
-                echo "No participant name provided. Defaulting to '$participant_name'."
+                echo "No participant name provided. Defaulting to '$vc_issuer'."
             fi
             ;;
         \?)
@@ -33,7 +33,7 @@ while getopts 'p:n:' opt; do
     esac
 done
 
-echo "Preparing wallet identity (identity of the user that acts on behalf of $participant_name)..."
+echo "Preparing wallet identity (identity of the user that acts on behalf of $vc_issuer)..."
 mkdir -p "$wallet_path"
 chmod o+rw "$wallet_path"
 
@@ -41,7 +41,7 @@ docker run -v $wallet_path:/cert quay.io/wi_stefan/did-helper:0.1.1
 
 echo -e "\nIssuing verifiable credential for USER"
 
-user_credential=$(./get_credential_for_consumer.sh http://keycloak-$participant_name.127.0.0.1.nip.io:8080 user-credential)
+user_credential=$(./get_credential_for_consumer.sh http://keycloak-$vc_issuer.127.0.0.1.nip.io:8080 user-credential)
 
 
 if $(return 0 2>/dev/null); then
@@ -54,7 +54,7 @@ fi
 
 echo "\nIssuing verifiable credential for OPERATOR"
 
-operator_credential=$(./get_credential_for_consumer.sh http://keycloak-$participant_name.127.0.0.1.nip.io:8080 operator-credential)
+operator_credential=$(./get_credential_for_consumer.sh http://keycloak-$vc_issuer.127.0.0.1.nip.io:8080 operator-credential)
 
 
 if $(return 0 2>/dev/null); then

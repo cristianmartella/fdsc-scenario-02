@@ -42,17 +42,11 @@ echo -e "Operator access token retrieved:\n$access_token"
 
 echo "\nFederating $participant_name..."
 
-# curl --request POST \
-#   --url http://scorpio-provider-a.127.0.0.1.nip.io:8080/ngsi-ld/v1/csourceRegistrations \
-#   --header 'content-type: application/ld+json' \
-#   --header 'user-agent: vscode-restclient' \
-#   --data '{"id": "urn:ngsi-ld:ContextSourceRegistration:provider-b","type": "ContextSourceRegistration","information": [{"entities": [{"type": "PhotovoltaicMeasurement"}]}],"endpoint": "http://scorpio-provider-b.127.0.0.1.nip.io:8080","@context": ["https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.7.jsonld"]}'
-
 curl -s -X POST $data_service_url \
     --header "Authorization: Bearer $access_token" \
     --header 'Content-Type: application/json' \
     --data-raw '{
-        "id": "urn:ngsi-ld:ContextSourceRegistration:provider-b",
+        "id": "urn:ngsi-ld:ContextSourceRegistration:'$participant_name'",
         "type": "ContextSourceRegistration",
         "information": [
             {
@@ -63,7 +57,7 @@ curl -s -X POST $data_service_url \
                 ]
             }
         ],
-        "endpoint": "http://scorpio-provider-b.127.0.0.1.nip.io:8080",
+        "endpoint": "http://scorpio-'$participant_name'.127.0.0.1.nip.io:8080",
         "@context": ["https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.7.jsonld"]
     }'
 
