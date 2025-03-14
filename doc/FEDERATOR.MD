@@ -1,6 +1,6 @@
 # Federator
 
-[Return to index](../../README.MD)
+[Return to index](../README.MD)
 
 ## Table of Contents
 
@@ -596,4 +596,4 @@ curl --X POST http://pap-federator.127.0.0.1.nip.io:8080/policy \
 helm uninstall federator-dsc -n federator
 ```
 
-[Return to index](../../README.MD)
+[Return to index](../README.MD)

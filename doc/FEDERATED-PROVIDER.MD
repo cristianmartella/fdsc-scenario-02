@@ -1,6 +1,6 @@
 # Federated Provider
 
-[Return to index](../../README.MD)
+[Return to index](../README.MD)
 
 ## Table of Contents
 
@@ -462,4 +462,4 @@ curl -X POST http://til.127.0.0.1.nip.io:8080/issuer \
 helm uninstall federated-provider-a-dsc -n federated-provider-a
 ```
 
-[Return to index](../../README.MD)
+[Return to index](../README.MD)

@@ -234,7 +234,6 @@ The whole setup and deployment of the FDSC instance presented in this documentat
 * 02.deploy_trust_anchor.sh
 * 03.deploy_provider.sh
 * 04.create_wallet.sh
-* 05.federate_participant.sh
 
 An additional maintenance script called `00.cleanup.sh` allows to uninstall the environment and even purge the cluster, if necessary.
 
@@ -242,4 +241,4 @@ The usage of the quick deployment and cleanup scripts is detailed [here](doc/SCR
 
 ## APIs
 
-The interaction with the FDSC instance in a marketplace scenario is documented [here](doc/MARKETPLACE.MD).
+The interaction with the FDSC instance in a federated scenario is documented [here](doc/FEDERATION.MD).

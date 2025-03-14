@@ -133,9 +133,6 @@ Similarly, to get the **OperatorCredential**:
 export OPERATOR_CREDENTIAL=$(./get_credential_for_consumer.sh http://keycloak-federated-provider-a.127.0.0.1.nip.io:8080 operator-credential); echo ${OPERATOR_CREDENTIAL}
 ```
 
-## Federate a participant
-
-
 ## Cleanup script
 
 Run the script `00.cleanup.sh` to uninstall the deployed pods, remove the namespaces and delete the persistent volumes.
