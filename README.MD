@@ -202,9 +202,9 @@ NOTE: the suffix '-a' emphasizes the possibility to scale up the model and inclu
 
 [Trust Anchor (fdsc-scenario-01)](https://github.com/cristianmartella/fdsc-scenario-01/blob/master/doc/trust-anchor/TRUST-ANCHOR.MD)
 
-[Federator](./doc/federator/FEDERATOR.MD)
+[Federator](./doc/FEDERATOR.MD)
 
-[Federated provider](./doc/federated-provider/FEDERATED-PROVIDER.MD)
+[Federated provider](./doc/FEDERATED-PROVIDER.MD)
 
 ## Setup k3s cluster
 
