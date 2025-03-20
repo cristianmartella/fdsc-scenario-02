@@ -1,9 +1,0 @@
-dependencies:
-- name: apollo
-  repository: https://fiware.github.io/helm-charts
-  version: 0.1.0
-- name: data-space-connector
-  repository: https://fiware.github.io/data-space-connector/
-  version: 7.17.0
-digest: sha256:98775e8c3b4fade868b4527f5649fe6d0a8fd11ec4d7aa65722219a0ef26768a
-generated: "2025-01-30T18:10:50.343295425+01:00"
