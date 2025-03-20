@@ -7,7 +7,7 @@ GET http://{{PAP-HOST}}/policy
 
 
 ### 02. Delete a policy
-@02_POLICY-ID = smlehbdvmo
+@02_POLICY-ID = ID
 
 DELETE http://{{PAP-HOST}}/policy/{{02_POLICY-ID}}
 
@@ -63,10 +63,10 @@ Content-Type: application/json
 }
 
 
-### 03. Create a policy to allow any participant to read entities of a given type
-@03_ENTITY-TYPE = PhotovoltaicMeasurement
-@03_ODRL-ASSIGNEE = vc:any
-@03_ODRL-ACTION = odrl:read
+### 04. Create a policy to allow any participant to read entities of a given type
+@04_ENTITY-TYPE = PhotovoltaicMeasurement
+@04_ODRL-ASSIGNEE = vc:any
+@04_ODRL-ACTION = odrl:read
 
 POST http://{{PAP-HOST}}/policy
 Content-Type: application/json
@@ -96,15 +96,15 @@ Content-Type: application/json
                     "odrl:operator": {
                         "@id": "odrl:eq"
                     },
-                    "odrl:rightOperand": "{{03_ENTITY-TYPE}}"
+                    "odrl:rightOperand": "{{04_ENTITY-TYPE}}"
                 }
             ]
         },
         "odrl:assignee": {
-            "@id": "{{03_ODRL-ASSIGNEE}}"
+            "@id": "{{04_ODRL-ASSIGNEE}}"
         },
         "odrl:action": {
-            "@id": "{{03_ODRL-ACTION}}"
+            "@id": "{{04_ODRL-ACTION}}"
         }
     }
 }

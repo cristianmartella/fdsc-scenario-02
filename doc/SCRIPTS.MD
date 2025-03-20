@@ -149,4 +149,4 @@ Additionally, the script can be sourced to restore the default system KUBECONFIG
 
 To keep track of the deployed participants, deployment scripts (`02.deploy_trust_anchor.sh` and `03.deploy_provider.sh`) store their names on a temporary file called `.participants.tmp`. This file is then consulted by the cleanup script to uninstall the corresponding deployments.
 
-[Return to index](./doc/README.MD)
+[Return to index](../README.MD)
