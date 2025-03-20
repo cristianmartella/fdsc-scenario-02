@@ -1,6 +1,6 @@
 # FIWARE Data Space Connector Federation
 
-![Version: 0.4.0](https://img.shields.io/badge/Version-0.4.0-informational?style=flat-square)
+![Version: 0.4.2](https://img.shields.io/badge/Version-0.4.2-informational?style=flat-square)
 
 ## Maintainers
 
