@@ -74,7 +74,7 @@ This group encompasses registrations for which a CB *is permitted* to hold conte
 
 The two **context source registrations** (CSR) included in this group are:
 
-* **Inclusive** CSR (**default mode** of operation) - An inclusive CSR specifies that the CB considers all registered context sources as equals and will distribute operations to these context sources even if relevant data is available directly withinb the CB itself (in which case all results will be integrated in the final response).
+* **Inclusive** CSR (**default mode** of operation) - An inclusive CSR specifies that the CB considers all registered context sources as equals and will distribute operations to these context sources even if relevant data is available directly within the CB itself (in which case all results will be integrated in the final response).
 * **Auxiliary** CSR - An auxiliary CSR never overrides data held directly within a CB. Auxiliary distributed operations are limited to context information consumption operations: context data from auxiliary context sources is only included if it is supplementary to the context data otherwise available to the CB.
 
 ### Proxied registrations
