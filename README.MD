@@ -65,7 +65,7 @@ graph TD;
   additive-->inclusive(Inclusive);
   additive-->auxiliary(Auxiliary);
   proxied-->exclusive(Exclusive);
-  proxied-->redirect(RSedirect);
+  proxied-->redirect(Redirect);
 ```
 
 ### Additive registrations
