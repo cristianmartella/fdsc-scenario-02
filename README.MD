@@ -100,7 +100,7 @@ For the purposes of this demo scenario, the federated provider data service will
 
 ### Architecture
 
-The architecture discussed in this section complies with the federated/distributed architecture included in the [DSBA Technical Convergence Recommendations](https://data-spaces-business-alliance.eu/wp-content/uploads/dlm_uploads/Data-Spaces-Business-Alliance-Technical-Convergence-V2.pdf) and, more specifically described in the [IDSA Rulebook](https://docs.internationaldataspaces.org/idsa-rulebook-v2/idsa-rulebook/3_functional_requirements#creating-a-data-space).
+The architecture discussed in this section complies with the federated/distributed architecture included in the [DSBA Technical Convergence Recommendations](https://data-spaces-business-alliance.eu/wp-content/uploads/dlm_uploads/Data-Spaces-Business-Alliance-Technical-Convergence-V2.pdf) and, more specifically, described in the [IDSA Rulebook](https://docs.internationaldataspaces.org/idsa-rulebook-v2/idsa-rulebook/3_functional_requirements#creating-a-data-space).
 
 #### General model
 
