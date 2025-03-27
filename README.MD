@@ -99,14 +99,16 @@ For the purposes of this demo scenario, the federated provider data service will
 
 ### Architecture
 
+The architecture discussed in this section complies with the federated/distributed architecture included in the [DSBA Technical Convergence Recommendations](https://data-spaces-business-alliance.eu/wp-content/uploads/dlm_uploads/Data-Spaces-Business-Alliance-Technical-Convergence-V2.pdf) and, more specifically described in the [IDSA Rulebook](https://docs.internationaldataspaces.org/idsa-rulebook-v2/idsa-rulebook/3_functional_requirements#creating-a-data-space).
+
 #### General model
 
 The general model consists of a multi-level hierarchy of federated context sources where each participant aggregates the contributions offered by downstream context units (i.e. federated providers) and potentially becomes a federated provider for its upstream federators. This scenario is illustrated in the following diagram.
 
 ```mermaid
-graph BT;
-  subgraph l5[" "]
-  direction TB
+flowchart BT;
+  subgraph l5["Level K"]
+  direction LR
     K0(FP K,0)
     etc5(...)
       style etc5 stroke-width:0px
@@ -114,66 +116,64 @@ graph BT;
   end
 
   subgraph l4[" "]
-  direction TB
+  direction LR
     etc4(...)
       style etc4 stroke-width:0px
   end
 
-  subgraph l3[" "]
-  direction TB
+  subgraph l3["Level i"]
+  direction LR
     IJ(FP/F i,j)
     etc3(...)
       style etc3 stroke-width:0px
   end
 
   subgraph l2[" "]
-  direction TB
+  direction LR
     etc2(...)
       style etc2 stroke-width:0px
   end
 
-  subgraph l1[" "]
-  direction TB
+  subgraph l1["Level 1"]
+  direction LR
     0(FP/F 1,0)
     etc1(...)
       style etc1 stroke-width:0px
     N(FP/F 1,N)
   end
 
-  subgraph l0[" "]
-    R(Root F)
-  end
 
-  0-->R
-  etc1-->R
-  N-->R
+  R(Root F)
 
-  etc2-->0
+  l5 --> l4
+  l4 --> l3
+  l3 --> l2
+  l2 --> l1
+  l1 --> R
 
-  IJ-->etc2
-  etc3-->etc2
+  0-.->etc1-.->N
+  N-.->etc1-.->0
 
-  etc4-->IJ
+  IJ-.->etc3
+  etc3-.->IJ
 
-  K0-->etc4
-  etc5-->etc4
-  KM-->etc4
+  K0-.->etc5-.->KM
+  KM-.->etc5-.->K0
 
-  style etc1 fill:transparent
   style etc2 fill:transparent
   style etc3 fill:transparent
   style etc4 fill:transparent
   style etc5 fill:transparent
-  style l0 fill:transparent,stroke:transparent
-  style l1 fill:transparent,stroke:transparent
+
+  style l1 fill:transparent
   style l2 fill:transparent,stroke:transparent
-  style l3 fill:transparent,stroke:transparent
+  style l3 fill:transparent
   style l4 fill:transparent,stroke:transparent
-  style l5 fill:transparent,stroke:transparent
+  style l5 fill:transparent
 ```
 
 The diagram shows the general tree topology of federator (F) and federated provider (FP) participants considered in this scenario. In particular, for a generic node $FP/F_{i,j}$, let $i\in\left[0,K\right]$ be the depth of the node in the hierarchy starting from the root node, where $K$ corresponds to the height of the tree. Similarly, let $j\in\left[0,Q\right]$ be the index of the node, where $Q$ corresponds to the maximum degree of its parent nodes.
-The node $FP/F_{i,j}$ can participate to the federation of multiple upstream federators, while combining the contributions provided by context source registrations related to its downstream federated providers.
+The node $FP/F_{i,j}$ can participate to the federation of multiple upstream and/or peer federators, while combining the contributions provided by context source registrations related to its downstream federated providers.
 
 In this tree representation the root is a federator while the leaves are federated providers.
 
