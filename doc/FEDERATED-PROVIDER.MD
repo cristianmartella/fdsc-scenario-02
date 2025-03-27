@@ -4,6 +4,39 @@
 
 ## Table of Contents
 
+- [Federated Provider](#federated-provider)
+  - [Table of Contents](#table-of-contents)
+  - [Introduction](#introduction)
+  - [Configuration values.yaml](#configuration-valuesyaml)
+    - [Data Service](#data-service)
+      - [Context Broker - Scorpio](#context-broker---scorpio)
+      - [Postgis database for Scorpio](#postgis-database-for-scorpio)
+    - [Verifiable Credentials issuance](#verifiable-credentials-issuance)
+      - [Keycloak](#keycloak)
+      - [Keycloak Realm configuration](#keycloak-realm-configuration)
+      - [Postgresql database for Keycloak](#postgresql-database-for-keycloak)
+    - [Excluded services](#excluded-services)
+      - [VCVerifier](#vcverifier)
+      - [Credentials Config Service](#credentials-config-service)
+      - [Trusted Issuers List](#trusted-issuers-list)
+      - [MySql database for TIL](#mysql-database-for-til)
+      - [ODRL-PAP](#odrl-pap)
+      - [APISIX - PEP](#apisix---pep)
+      - [TMForum APIs to support contracting](#tmforum-apis-to-support-contracting)
+      - [Contract Management](#contract-management)
+  - [Deployment of the Federated Provider](#deployment-of-the-federated-provider)
+    - [Step-by-step procedure](#step-by-step-procedure)
+      - [1. Create an identity for the federated provider](#1-create-an-identity-for-the-federated-provider)
+      - [2. Replace CONSUMER\_DID in values.yaml with generated DID](#2-replace-consumer_did-in-valuesyaml-with-generated-did)
+      - [3. Create 'federated-provider-a' namespace](#3-create-federated-provider-a-namespace)
+      - [4. Deploy the key into the cluster](#4-deploy-the-key-into-the-cluster)
+      - [5. Install the federated provider](#5-install-the-federated-provider)
+    - [Quick deployment](#quick-deployment)
+    - [Additional configuration](#additional-configuration)
+      - [Register the federated provider at the Trust Anchor](#register-the-federated-provider-at-the-trust-anchor)
+  - [Uninstall](#uninstall)
+
+
 ## Introduction
 
 A federated provider (FP) offers "local" context data and services to an upstream federator. The federator aggregates and makes available such information to the other authorized participants of the data space.

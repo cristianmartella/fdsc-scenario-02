@@ -6,6 +6,14 @@
 
 - [Scripts usage guide](#scripts-usage-guide)
   - [Table of Contents](#table-of-contents)
+  - [k3s cluster deployment](#k3s-cluster-deployment)
+  - [Trust Anchor deployment](#trust-anchor-deployment)
+  - [Provider deployment](#provider-deployment)
+    - [Example: federator certificate.conf](#example-federator-certificateconf)
+    - [Example: federated provider certificate.conf](#example-federated-provider-certificateconf)
+  - [Wallet identity creation](#wallet-identity-creation)
+    - [Generating verifiable credentials](#generating-verifiable-credentials)
+  - [Cleanup script](#cleanup-script)
 
 ## k3s cluster deployment
 
