@@ -193,9 +193,8 @@ graph BT
   FPA-->F
 ```
 
-```txt
-NOTE: the suffix '-a' emphasizes the possibility to scale up the model and include additional federated providers (e.g. with suffixes '-b', '-c', and so forth).
-```
+> [!NOTE]
+> The suffix '-a' emphasizes the possibility to scale up the model and include additional federated providers (e.g. with suffixes '-b', '-c', and so forth).
 
 ## Components overview
 
