@@ -1,6 +1,6 @@
 # FIWARE Data Space Connector Federation
 
-![Version: 0.4.2](https://img.shields.io/badge/Version-0.4.2-informational?style=flat-square)
+![Version: 0.4.3](https://img.shields.io/badge/Version-0.4.3-informational?style=flat-square)
 
 ## Maintainers
 
@@ -160,6 +160,7 @@ flowchart BT;
   K0-.->etc5-.->KM
   KM-.->etc5-.->K0
 
+  style etc1 fill:transparent
   style etc2 fill:transparent
   style etc3 fill:transparent
   style etc4 fill:transparent
