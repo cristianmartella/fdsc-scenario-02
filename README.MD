@@ -52,7 +52,7 @@ In NGSI-LD, the **default** federated case relates to **CB-to-CB federation**. O
 * Backup context sources
 * Complex data sharing scenarios
 
-These scenarios require a different **subset of operations** to the standard federation case (a full CB is often not required). In particular, in some scenarios, security concerns may explicitly deny certain operations. In other cases, some entities or attributes may only b eobtained from a single specific context source (e.g. device actuation), while others could be augmented from multiple sources with limited availability.
+These scenarios require a different **subset of operations** to the standard federation case (a full CB is often not required). In particular, in some scenarios, security concerns may explicitly deny certain operations. In other cases, some entities or attributes may only be obtained from a single specific context source (e.g. device actuation), while others could be augmented from multiple sources with limited availability.
 
 ## Registration operations
 
@@ -100,7 +100,7 @@ For the purposes of this demo scenario, the federated provider data service will
 
 ### Architecture
 
-The architecture discussed in this section complies with the federated/distributed architecture included in the [DSBA Technical Convergence Recommendations](https://data-spaces-business-alliance.eu/wp-content/uploads/dlm_uploads/Data-Spaces-Business-Alliance-Technical-Convergence-V2.pdf) and, more specifically, described in the [IDSA Rulebook](https://docs.internationaldataspaces.org/idsa-rulebook-v2/idsa-rulebook/3_functional_requirements#creating-a-data-space).
+The architecture discussed in this section complies with the federated/distributed architecture included in the [DSBA Technical Convergence Recommendations](https://data-spaces-business-alliance.eu/wp-content/uploads/dlm_uploads/Data-Spaces-Business-Alliance-Technical-Convergence-V2.pdf) and, more specifically, described in the [IDSA Rulebook](https://docs.internationaldataspaces.org/ids-knowledgebase/idsa-rulebook/idsa-rulebook/3.-functional_requirements/3.5-creating_a_data_space).
 
 #### General model
 
